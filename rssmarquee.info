@@ -1,0 +1,13 @@
+name = RSS Marquee
+description = Show an RSS Marquee block
+core = 7.x
+package = InterCube media
+version = "7.x-1.x-dev"
+;configure = admin/config/content/cubiconews
+
+; Base module files
+files[] = rssmarquee.admin.inc
+files[] = rssmarquee.install
+files[] = rssmarquee.module
+
+dependencies[] = libraries (2.x)

@@ -1,0 +1,69 @@
+<?php
+/**
+ * @file
+ * rssmarquee file
+ *
+ * Created by George Sokianos (walkero@gmail.com)
+ *
+ * @todo
+ * 
+ * @changelog
+ * 	v1.0  (2015/03/11)
+ */
+
+ 
+ /**
+ * Implements hook_install().
+ */
+function rssmarquee_install() {
+}
+
+function rssmarquee_uninstall() {
+}
+
+
+/**
+ * Implements hook_requirements().
+ */
+function rssmarquee_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    $t = get_t();
+    $library = libraries_detect('scrollbox');
+    $error_type = isset($library['error']) ? drupal_ucfirst($library['error']) : '';
+    $error_message = isset($library['error message']) ? $library['error message'] : '';
+
+    if (empty($library['installed'])) {
+      $requirements['scrollbox_plugin'] = array(
+        'title' => $t('Scrollbox plugin'),
+        'value' => $t('@e: At least @a', array('@e' => $error_type, '@a' => SCROLLBOX_MIN_PLUGIN_VERSION)),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('!error You need to download the !scrollbox, extract the archive and place the scrollbox directory in the %path directory on your server.', array('!error' => $error_message, '!scrollbox' => l($t('Scrollbox plugin'), $library['download url']), '%path' => 'sites/all/libraries')),
+      );
+    }
+    elseif (version_compare($library['version'], SCROLLBOX_MIN_PLUGIN_VERSION, '>=')) {
+      $requirements['scrollbox_plugin'] = array(
+        'title' => $t('Scrollbox plugin'),
+        'severity' => REQUIREMENT_OK,
+        'value' => $library['version'],
+      );
+    }
+    else {
+      $requirements['scrollbox_plugin'] = array(
+        'title' => $t('Scrollbox plugin'),
+        'value' => $t('At least @a', array('@a' => SCROLLBOX_MIN_PLUGIN_VERSION)),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('You need to download a later version of the !scrollbox and replace the old version located in the %path directory on your server.', array('!scrollbox' => l($t('Scrollbox plugin'), $library['download url']), '%path' => $library['library path'])),
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implementation of hook_schema().
+ */
+function rssmarquee_schema() {
+}
